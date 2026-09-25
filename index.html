@@ -135,6 +135,9 @@
   <section id="risultato" class="hidden rounded-xl p-6 sm:p-7 mt-6 text-center" style="border:2px solid var(--accent); background:var(--paper2)">
     <p class="text-xs tracking-wide mb-2" style="color:var(--muted)">Il tuo codice fiscale</p>
     <p id="cfOutput" class="mono text-2xl sm:text-3xl font-semibold break-all" style="letter-spacing:.06em"></p>
+    <div class="mt-4 flex justify-center overflow-x-auto">
+      <svg id="cfBarcode" xmlns="http://www.w3.org/2000/svg" style="background:#fff; border-radius:4px"></svg>
+    </div>
     <button id="copia" class="mt-4 text-sm px-4 py-1.5 rounded-md font-medium" style="border:1px solid var(--line)">Copia</button>
     <p id="copiato" class="text-xs mt-2 hidden" style="color:var(--muted)">Copiato negli appunti.</p>
   </section>
@@ -247,6 +250,61 @@ function controlChar(code15){
   return REM[sum%26];
 }
 
+// Tabella Code 39: ogni carattere è codificato con 5 barre + 4 spazi (9 elementi),
+// 0 = elemento stretto, 1 = elemento largo. Standard usato anche sulla tessera sanitaria.
+const CODE39 = {
+  '0':'000110100','1':'100100001','2':'001100001','3':'101100000','4':'000110001',
+  '5':'100110000','6':'001110000','7':'000100101','8':'100100100','9':'001100100',
+  'A':'100001001','B':'001001001','C':'101001000','D':'000011001','E':'100011000',
+  'F':'001011000','G':'000001101','H':'100001100','I':'001001100','J':'000011100',
+  'K':'100000011','L':'001000011','M':'101000010','N':'000010011','O':'100010010',
+  'P':'001010010','Q':'000000111','R':'100000110','S':'001000110','T':'000010110',
+  'U':'110000001','V':'011000001','W':'111000000','X':'010010001','Y':'110010000',
+  'Z':'011010000','-':'010000101','.':'110000100',' ':'011000100','$':'010101000',
+  '/':'010100010','+':'010001010','%':'000101010','*':'010010100'
+};
+
+function renderBarcode(testo){
+  const svg = document.getElementById('cfBarcode');
+  const unit = 2.2;      // larghezza dell'elemento stretto, in px
+  const wideMul = 2.5;   // moltiplicatore per gli elementi larghi
+  const gap = unit;      // spazio stretto tra un carattere e l'altro
+  const height = 60;
+  const chars = ('*' + testo.toUpperCase() + '*').split('');
+
+  let totalWidth = 0;
+  const rects = [];
+
+  chars.forEach((ch, ci) => {
+    const pattern = CODE39[ch];
+    if(!pattern) return; // carattere non codificabile, viene saltato
+    let x = totalWidth;
+    for(let i=0;i<9;i++){
+      const isBar = (i % 2 === 0);
+      const wide = pattern[i] === '1';
+      const w = unit * (wide ? wideMul : 1);
+      if(isBar){
+        rects.push({x, w, h: height});
+      }
+      x += w;
+    }
+    totalWidth = x;
+    if(ci < chars.length - 1) totalWidth += gap;
+  });
+
+  const padding = 16;
+  svg.setAttribute('viewBox', `0 0 ${totalWidth + padding*2} ${height + 28}`);
+  svg.setAttribute('width', Math.min(totalWidth + padding*2, 640));
+  svg.setAttribute('height', height + 28);
+
+  let markup = `<rect x="0" y="0" width="${totalWidth + padding*2}" height="${height + 28}" fill="#fff"/>`;
+  rects.forEach(r => {
+    markup += `<rect x="${(r.x + padding).toFixed(2)}" y="8" width="${r.w.toFixed(2)}" height="${r.h}" fill="#000"/>`;
+  });
+  markup += `<text x="${(totalWidth/2 + padding).toFixed(2)}" y="${height + 22}" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="13" letter-spacing="1" fill="#000">${testo.toUpperCase()}</text>`;
+  svg.innerHTML = markup;
+}
+
 function mostraErrore(msg){
   const e=document.getElementById('errore');
   e.textContent=msg; e.classList.remove('hidden');
@@ -272,6 +330,7 @@ document.getElementById('calcola').addEventListener('click',()=>{
   const cf = code15 + controlChar(code15);
 
   document.getElementById('cfOutput').textContent = cf;
+  renderBarcode(cf);
   document.getElementById('risultato').classList.remove('hidden');
   document.getElementById('copiato').classList.add('hidden');
 });

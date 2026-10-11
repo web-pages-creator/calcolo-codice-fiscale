@@ -1,0 +1,45 @@
+:root{--ink:#1F2933;--paper:#fff;--paper2:#F5F7FA;--accent:#0066CC;--line:#DDE3EA;--muted:#5C6B78}
+@media (prefers-color-scheme:dark){:root{--ink:#EAEEF2;--paper:#0E1A26;--paper2:#152534;--line:#28394A;--muted:#93A4B3;--accent:#4DA3FF}}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:'Titillium Web',system-ui,sans-serif;font-size:17px;line-height:1.65;padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px)}
+.wrap{max-width:760px;margin:0 auto;padding:0 18px}
+header.site{border-bottom:1px solid var(--line);background:var(--paper2)}
+header.site .wrap{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 20px;padding-top:12px;padding-bottom:12px}
+.brand{font-weight:700;font-size:19px;color:var(--ink);text-decoration:none}
+nav a{color:var(--ink);text-decoration:none;margin-right:14px;font-size:15px;white-space:nowrap}
+nav a:hover,nav a.on{color:var(--accent);text-decoration:underline}
+main{padding:34px 0 20px}
+h1{font-size:clamp(26px,5vw,34px);line-height:1.2;margin:0 0 10px}
+h2{font-size:23px;margin:34px 0 8px}h3{font-size:18px;margin:22px 0 6px}
+.lead{color:var(--muted);font-size:18px;margin:0 0 24px}
+a{color:var(--accent)}p{margin:0 0 14px}ul,ol{padding-left:22px}li{margin-bottom:6px}
+.card{background:var(--paper2);border:1px solid var(--line);border-radius:12px;padding:22px;margin:20px 0}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.grid{grid-template-columns:1fr}}
+label{display:block;font-size:14px;font-weight:600;margin-bottom:5px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+input:focus,select:focus{outline:2px solid var(--accent)}
+button{font:inherit;font-weight:600;color:#fff;background:var(--accent);border:0;border-radius:8px;padding:11px 22px;cursor:pointer;margin-top:18px}
+button.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);padding:6px 14px;margin-top:12px;font-size:14px}
+.res{display:none;text-align:center;border:2px solid var(--accent)}
+.mono,.cf{font-family:'IBM Plex Mono',ui-monospace,monospace}
+.cf{font-size:clamp(20px,5vw,30px);font-weight:600;letter-spacing:.06em;word-break:break-all;margin:6px 0}
+.err{color:#C0392B;font-size:14px;display:none;margin-top:12px}
+.muted{color:var(--muted)}.small{font-size:14px}
+table{border-collapse:collapse;width:100%;margin:12px 0 18px;font-size:15px}
+th,td{border:1px solid var(--line);padding:7px 10px;text-align:left}th{background:var(--paper2)}
+.tbl{overflow-x:auto}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;margin:18px 0}
+.cards a{display:block;border:1px solid var(--line);border-radius:10px;padding:14px;text-decoration:none;color:var(--ink);background:var(--paper2)}
+.cards a b{display:block;color:var(--accent);margin-bottom:4px}
+.note{border-left:4px solid var(--accent);padding:8px 14px;background:var(--paper2);margin:18px 0}
+footer.site{border-top:1px solid var(--line);margin-top:40px;padding:22px 0 30px;font-size:14px;color:var(--muted)}
+footer.site a{color:var(--muted);margin-right:14px}
+.sep{display:inline-block;width:1px;height:16px;background:var(--line);margin:0 14px 0 2px;vertical-align:middle}
+@media(max-width:560px){.sep{display:none}}
+.logo{position:relative;display:inline-block;width:38px;height:26px;border-radius:5px;background:linear-gradient(135deg,var(--accent),#003D80);overflow:hidden;vertical-align:middle;margin-right:10px;flex:none}
+.logo i{position:absolute;top:4px;left:4px;width:9px;height:7px;border-radius:2px;background:linear-gradient(135deg,#F5D06B,#D9A93B)}
+.logo b{position:absolute;bottom:2px;left:4px;right:4px;font:600 6px/1 'IBM Plex Mono',monospace;color:#fff;letter-spacing:.06em}
+.logo.big{width:64px;height:44px;border-radius:7px;margin:4px 0 0}
+.logo.big i{top:7px;left:7px;width:14px;height:10px}.logo.big b{font-size:9px;bottom:4px;left:7px}
+.hero{display:flex;gap:16px;align-items:flex-start}
